@@ -41,6 +41,8 @@ export const useUserStore = defineStore("user", () => {
         .then((res: any) => {
           roles.value = res.data.roles
           username.value = res.data.username
+          console.log(store)
+          debugger
           resolve(res)
         })
         .catch((error) => {
