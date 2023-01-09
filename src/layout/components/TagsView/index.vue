@@ -166,7 +166,7 @@ onMounted(() => {
         @click.middle="!isAffix(tag) ? closeSelectedTag(tag) : ''"
         @contextmenu.prevent="openMenu(tag, $event)"
       >
-        {{ tag.meta?.title }}
+        <span class="tag-title">{{ tag.meta?.title }}</span>
         <el-icon v-if="!isAffix(tag)" :size="12" @click.prevent.stop="closeSelectedTag(tag)">
           <Close />
         </el-icon>
@@ -189,20 +189,21 @@ onMounted(() => {
   border-bottom: 1px solid #d8dce5;
   box-shadow: 0 1px 3px 0 #00000010, 0 0 3px 0 #00000010;
   .tags-view-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
     .tags-view-item {
-      display: inline-block;
-      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       cursor: pointer;
       height: 26px;
-      line-height: 26px;
       border: 1px solid var(--v3-tagsview-tag-border-color);
       border-radius: var(--v3-tagsview-tag-border-radius);
       color: var(--v3-tagsview-tag-text-color);
       background-color: var(--v3-tagsview-tag-bg-color);
       padding: 0 8px;
       font-size: 12px;
-      margin-left: 5px;
-      margin-top: 4px;
+      margin: 4px 0 0 5px;
       &:first-of-type {
         margin-left: 5px;
       }
@@ -223,6 +224,9 @@ onMounted(() => {
           position: relative;
           margin-right: 2px;
         }
+      }
+      .tag-title {
+        margin-left: 2px;
       }
       .el-icon {
         margin: 0 2px;

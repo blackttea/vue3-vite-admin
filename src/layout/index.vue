@@ -65,6 +65,7 @@ const handleClickOutside = () => {
 .app-wrapper {
   @include clearfix;
   position: relative;
+  overflow: hidden;
   width: 100%;
 }
 

@@ -1,6 +1,12 @@
+<script setup>
+import bkMdPreview from "@/components/bkMdPreview/index.vue"
+import bkMdEditor from "@/components/bkMdEditor/index.vue"
+</script>
+
 <template>
   <div class="app-container center">
-    <el-empty description="Admin 权限可见" />
+    <bk-md-editor />
+    <bk-md-preview />
   </div>
 </template>
 
@@ -8,7 +14,8 @@
 .center {
   height: 100%;
   display: flex;
-  justify-content: center;
+  flex-wrap: wrap;
   align-items: center;
+  overflow: auto;
 }
 </style>

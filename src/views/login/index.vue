@@ -18,7 +18,7 @@ const codeUrl = ref("")
 const loginForm: ILoginData = reactive({
   username: "admin",
   password: "12345678",
-  code: ""
+  code: "V3Admin"
 })
 /** 登录表单校验规则 */
 const loginFormRules: FormRules = {
@@ -58,7 +58,7 @@ const handleLogin = () => {
 /** 创建验证码 */
 const createCode = () => {
   // 先清空验证码的输入
-  loginForm.code = ""
+  // loginForm.code = ""
   // 获取验证码
   codeUrl.value = ""
   getLoginCodeApi().then((res: any) => {

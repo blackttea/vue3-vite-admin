@@ -4,6 +4,10 @@ import { ElMessage } from "element-plus"
 import { get } from "lodash-es"
 import { getToken } from "./cache/cookies"
 
+const [RETRY_COUNT, RETRY_DELAY] = [3, 3000]
+const timeout = 10000
+const errRetry = [`timeout of ${timeout}ms exceeded`]
+
 /** 创建请求实例 */
 function createService() {
   // 创建一个 Axios 实例
@@ -80,6 +84,30 @@ function createService() {
           break
       }
       ElMessage.error(error.message)
+
+      const config = error.config
+      // 全局的请求次数,请求的间隙
+      if (config && RETRY_COUNT && errRetry.includes(error.message)) {
+        // 设置用于跟踪重试计数的变量
+        config.__retryCount = config.__retryCount || 0
+        // 检查是否已经把重试的总数用完
+        if (config.__retryCount >= RETRY_COUNT) {
+          return Promise.reject({ msg: error.message })
+        }
+        // 增加重试计数
+        config.__retryCount++
+        // 创造新的Promise来处理指数后退
+        const backoff = new Promise<void>((resolve) => {
+          setTimeout(() => {
+            resolve()
+          }, RETRY_DELAY || 1)
+        })
+        // instance重试请求的Promise
+        return backoff.then(() => {
+          return service(config)
+        })
+      }
+
       return Promise.reject(error)
     }
   )

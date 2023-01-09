@@ -3,7 +3,7 @@
  * 在此查阅所有可自定义的变量：https://github.com/element-plus/element-plus/blob/dev/packages/theme-chalk/src/common/var.scss
  */
 
-html.dark-blue {
+html .dark-blue {
   /** color */
   --el-color-primary: #01efb7bb;
   --el-color-success: #01efb7bb;

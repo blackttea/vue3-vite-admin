@@ -48,3 +48,20 @@ a:hover {
 div:focus {
   outline: none;
 }
+
+/* 滚动条宽高，横向滚动条的高，纵向滚动条的宽 */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* 滚动轨道 */
+::-webkit-scrollbar-track {
+  border-radius: 5px;
+}
+
+/* 滚动条 */
+::-webkit-scrollbar-thumb {
+  background: #cccccc;
+  border-radius: 5px;
+}

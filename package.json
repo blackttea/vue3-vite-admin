@@ -1,16 +1,7 @@
 {
-  "name": "v3-admin-vite",
+  "name": "vue3-admin-vite",
   "version": "3.3.1",
-  "description": "一个免费开源的中后台管理系统基础解决方案，基于 Vue3、TypeScript、Element Plus、Pinia 和 Vite 等主流技术.",
-  "author": {
-    "name": "pany",
-    "email": "939630029@qq.com",
-    "url": "https://github.com/pany-ang"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/un-pany/v3-admin-vite.git"
-  },
+  "description": "",
   "scripts": {
     "dev": "vite",
     "build:stage": "vue-tsc --noEmit && vite build --mode staging",
@@ -24,6 +15,8 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.10",
+    "@kangc/v-md-editor": "^2.3.15",
+    "ant-design-vue": "^3.2.15",
     "axios": "^1.2.2",
     "dayjs": "^1.11.7",
     "element-plus": "^2.2.27",
@@ -34,6 +27,7 @@
     "path-browserify": "^1.0.1",
     "path-to-regexp": "^6.2.1",
     "pinia": "^2.0.28",
+    "prismjs": "^1.29.0",
     "screenfull": "^6.0.2",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6",
@@ -47,6 +41,7 @@
     "@types/node": "^18.11.18",
     "@types/nprogress": "^0.2.0",
     "@types/path-browserify": "^1.0.0",
+    "@types/prismjs": "^1.26.0",
     "@typescript-eslint/eslint-plugin": "^5.47.1",
     "@typescript-eslint/parser": "^5.47.1",
     "@vitejs/plugin-vue": "^4.0.0",

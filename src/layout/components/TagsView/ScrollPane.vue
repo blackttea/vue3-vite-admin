@@ -82,7 +82,7 @@ const showScreenfull = computed(() => {
     // 横向超出窗口长度时，显示滚动条
     white-space: nowrap;
     .scrollbar-content {
-      display: inline-block;
+      display: flex;
     }
   }
   .screenfull {

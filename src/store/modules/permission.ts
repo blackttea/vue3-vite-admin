@@ -43,7 +43,7 @@ export const usePermissionStore = defineStore("permission", () => {
     } else {
       accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
     }
-    routes.value = constantRoutes.concat(accessedRoutes)
+    routes.value = constantRoutes[4]?.children || []
     dynamicRoutes.value = accessedRoutes
   }
 
