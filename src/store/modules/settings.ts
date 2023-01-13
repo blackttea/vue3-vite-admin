@@ -12,6 +12,13 @@ export const useSettingsStore = defineStore("settings", () => {
   const showScreenfull = ref<boolean>(layoutSettings.showScreenfull)
   const showGreyMode = ref<boolean>(layoutSettings.showGreyMode)
   const showColorWeakness = ref<boolean>(layoutSettings.showColorWeakness)
+  const navigation = ref<boolean>(layoutSettings.navigation)
+  const systemColor = ref<string>(layoutSettings.systemColor)
+  const loginBackImg = ref<string>(layoutSettings.loginBackImg)
+  const logoNotFold = ref<string>(layoutSettings.logoFold)
+  const logoFold = ref<string>(layoutSettings.logoNotFold)
+  const tagNum = ref<number>(layoutSettings.tagNum)
+  const mode = ref<string>(layoutSettings.mode)
 
   return {
     fixedHeader,
@@ -22,6 +29,13 @@ export const useSettingsStore = defineStore("settings", () => {
     showThemeSwitch,
     showScreenfull,
     showGreyMode,
-    showColorWeakness
+    showColorWeakness,
+    navigation,
+    systemColor,
+    loginBackImg,
+    logoNotFold,
+    logoFold,
+    tagNum,
+    mode
   }
 })

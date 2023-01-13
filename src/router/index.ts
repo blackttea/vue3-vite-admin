@@ -1,148 +1,8 @@
 import { type RouteRecordRaw, createRouter, createWebHashHistory, createWebHistory } from "vue-router"
-import { Menu } from "../type/menu"
 const view = import.meta.glob("../**/**/**.vue")
 const layout = import.meta.glob("../layout/**/**.vue")
-let r: any = []
-console.log(view, layout)
 
 const Layout = layout["../layout/index.vue"]
-console.log(Layout)
-
-const menuList: Menu[] = [
-  {
-    title: "首页",
-    name: "Dashboard",
-    path: "/dashboard",
-    component: "../views/dashboard/index.vue",
-    hidden: false,
-    redirect: "",
-    id: 0,
-    parentId: null,
-    svgIcon: "dashboard",
-    seq: 0
-  },
-  {
-    title: "表格",
-    path: "/table",
-    name: "Table",
-    component: null,
-    hidden: false,
-    redirect: "",
-    id: 1,
-    parentId: null,
-    svgIcon: "lock",
-    seq: 1
-  },
-  {
-    title: "权限",
-    name: "Permission",
-    path: "/permission",
-    component: null,
-    hidden: false,
-    redirect: "",
-    id: 2,
-    parentId: null,
-    svgIcon: "lock",
-    seq: 2
-  },
-  {
-    title: "antd-table",
-    path: "antd",
-    name: "Antd",
-    component: null,
-    hidden: false,
-    redirect: "",
-    id: 3,
-    parentId: 1,
-    svgIcon: "",
-    seq: 3
-  },
-  {
-    title: "antd-table",
-    path: "antd",
-    name: "Antd",
-    component: "../views/table/element-plus/index.vue",
-    hidden: false,
-    redirect: "",
-    id: 10,
-    parentId: 3,
-    svgIcon: "",
-    seq: 10
-  },
-  {
-    title: "vxe-table",
-    path: "vxe",
-    name: "Vxe",
-    component: "../views/table/vxe-table/index.vue",
-    hidden: false,
-    redirect: "",
-    id: 4,
-    parentId: 1,
-    svgIcon: "",
-    seq: 4
-  },
-  {
-    title: "页面权限",
-    name: "Page",
-    path: "page",
-    component: "../views/permission/page.vue",
-    hidden: false,
-    redirect: "",
-    id: 5,
-    parentId: 2,
-    svgIcon: "",
-    seq: 5
-  },
-  {
-    title: "按钮权限",
-    path: "directive",
-    name: "Directive",
-    component: "../views/permission/directive.vue",
-    hidden: false,
-    redirect: "",
-    id: 5,
-    parentId: 2,
-    svgIcon: "",
-    seq: 5
-  }
-]
-console.log(menuList)
-
-const formatTree = (data: any, id: string, parentId: string, childName: string, reForm: any) => {
-  const result: any = []
-  const map: any = {}
-  if (!Array.isArray(data)) {
-    return []
-  }
-  data.forEach((item: any) => {
-    map[item[id]] = item
-  })
-  data.forEach((item: any) => {
-    const parent = map[item[parentId]]
-    if (Object.prototype.toString.call(reForm) === "[object Function]") reForm(item)
-    if (parent) {
-      if (!parent[childName]) parent[childName] = []
-      parent[childName].push(item)
-    } else {
-      result.push(item)
-    }
-  })
-  return result
-}
-
-const formatMenu = (menuList: Menu[]) => {
-  const reFormData = (data: any) => {
-    if (!data["component"] || data["component"] === "../layout/index.vue") data["children"] = []
-    data["component"] = view[data["component"]]
-    data["meta"] = {}
-    const showList = ["hidden", "title", "svgIcon"]
-    for (const item of showList) if (data[item] !== undefined) data["meta"][item] = data[item]
-  }
-  r = formatTree(menuList, "id", "parentId", "children", reFormData)
-}
-
-formatMenu(menuList)
-
 /** 常驻路由 */
 export const constantRoutes: RouteRecordRaw[] = [
   {
@@ -183,17 +43,30 @@ export const constantRoutes: RouteRecordRaw[] = [
   {
     path: "/",
     component: Layout,
-    children: [...r]
-  },
-  {
-    path: "/menu",
-    component: view["../views/menu/index.vue"],
-    name: "Menu",
-    meta: {
-      title: "多级菜单",
-      svgIcon: "menu",
-      hidden: true
-    }
+    name: "index",
+    children: [
+      // ...r,
+      {
+        path: "/system",
+        component: view["../views/system/index.vue"],
+        name: "system",
+        meta: {
+          title: "系统配置",
+          svgIcon: "menu",
+          hidden: true
+        }
+      },
+      {
+        path: "/menu",
+        component: view["../views/menu/index.vue"],
+        name: "Menu",
+        meta: {
+          title: "多级菜单",
+          svgIcon: "menu",
+          hidden: true
+        }
+      }
+    ]
   }
 ]
 
@@ -202,47 +75,7 @@ export const constantRoutes: RouteRecordRaw[] = [
  * 用来放置有权限 (Roles 属性) 的路由
  * 必须带有 Name 属性
  */
-export const asyncRoutes: RouteRecordRaw[] = [
-  // {
-  //   path: "/permission",
-  //   component: Layout,
-  //   redirect: "/permission/page",
-  //   name: "Permission",
-  //   meta: {
-  //     title: "权限管理",
-  //     svgIcon: "lock",
-  //     roles: ["admin", "editor"], // 可以在根路由中设置角色
-  //     alwaysShow: true // 将始终显示根菜单
-  //   },
-  //   children: [
-  //     {
-  //       path: "page",
-  //       component: () => import("@/views/permission/page.vue"),
-  //       name: "PagePermission",
-  //       meta: {
-  //         title: "页面权限",
-  //         roles: ["admin"] // 或者在子导航中设置角色
-  //       }
-  //     },
-  //     {
-  //       path: "directive",
-  //       component: () => import("@/views/permission/directive.vue"),
-  //       name: "DirectivePermission",
-  //       meta: {
-  //         title: "指令权限" // 如果未设置角色，则表示：该页面不需要权限，但会继承根路由的角色
-  //       }
-  //     }
-  //   ]
-  // },
-  {
-    path: "/:pathMatch(.*)*", // Must put the 'ErrorPage' route at the end, 必须将 'ErrorPage' 路由放在最后
-    redirect: "/404",
-    name: "ErrorPage",
-    meta: {
-      hidden: true
-    }
-  }
-]
+export const asyncRoutes: RouteRecordRaw[] = []
 
 const router = createRouter({
   history:

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { type PropType, computed } from "vue"
 import { type RouteRecordRaw } from "vue-router"
-import SidebarItemLink from "./SidebarItemLink.vue"
-import { isExternal } from "@/utils/validate"
-import path from "path-browserify"
+// import { useSettingsStore } from "@/store/modules/settings"
+// import { useTagsViewStore } from "@/store/modules/tags-view"
+// import { message } from "ant-design-vue"
 
 const props = defineProps({
   item: {
@@ -54,31 +54,47 @@ const theOnlyOneChild = computed(() => {
   return { ...props.item, path: "" }
 })
 
-const resolvePath = (routePath: string) => {
-  if (isExternal(routePath)) {
-    return routePath
-  }
-  if (isExternal(props.basePath)) {
-    return props.basePath
-  }
-  return path.resolve(props.basePath, routePath)
-}
+// const resolvePath = (routePath: any) => {
+//   debugger
+//   const settingsStore = useSettingsStore()
+//   const tagsViewStore = useTagsViewStore()
+//   // eslint-disable-next-line no-constant-condition
+//   if (routePath && false) {
+//     if (tagsViewStore.visitedViews.length === settingsStore.tagNum) {
+//       const isActive = tagsViewStore.visitedViews.findIndex((r) => {
+//         return (r.path || "").indexOf(routePath) > -1
+//       })
+//       debugger
+//       if (isActive > -1) return routePath
+//       else {
+//         message.error("超出最大tag数，请清除一部分不需要tag!")
+//       }
+//     }
+//   }
+//   console.log(props.basePath)
+//   return routePath.id
+//   // if (isExternal(routePath)) {
+//   //   return routePath
+//   // }
+//   // if (isExternal(props.basePath)) {
+//   //   return props.basePath
+//   // }
+//   // return path.resolve(props.basePath, routePath)
+// }
 </script>
 
 <template>
   <div v-if="!props.item.meta?.hidden" :class="{ 'simple-mode': props.isCollapse, 'first-level': props.isFirstLevel }">
     <template v-if="!alwaysShowRootMenu && theOnlyOneChild && !theOnlyOneChild.children">
-      <SidebarItemLink v-if="theOnlyOneChild.meta" :to="resolvePath(theOnlyOneChild.path)">
-        <el-menu-item :index="resolvePath(theOnlyOneChild.path)">
-          <svg-icon v-if="theOnlyOneChild.meta.svgIcon" :name="theOnlyOneChild.meta.svgIcon" />
-          <component v-else-if="theOnlyOneChild.meta.elIcon" :is="theOnlyOneChild.meta.elIcon" class="el-icon" />
-          <template v-if="theOnlyOneChild.meta.title" #title>
-            {{ theOnlyOneChild.meta.title }}
-          </template>
-        </el-menu-item>
-      </SidebarItemLink>
+      <el-menu-item :index="`${theOnlyOneChild.id}`">
+        <svg-icon v-if="theOnlyOneChild.meta.svgIcon" :name="theOnlyOneChild.meta.svgIcon" />
+        <component v-else-if="theOnlyOneChild.meta.elIcon" :is="theOnlyOneChild.meta.elIcon" class="el-icon" />
+        <template v-if="theOnlyOneChild.meta.title" #title>
+          {{ theOnlyOneChild.meta.title }}
+        </template>
+      </el-menu-item>
     </template>
-    <el-sub-menu v-else :index="resolvePath(props.item.path)" popper-append-to-body>
+    <el-sub-menu v-else :index="`${props.item.id}`" popper-append-to-body>
       <template #title>
         <svg-icon v-if="props.item.meta && props.item.meta.svgIcon" :name="props.item.meta.svgIcon" />
         <component v-else-if="props.item.meta && props.item.meta.elIcon" :is="props.item.meta.elIcon" class="el-icon" />
@@ -89,9 +105,9 @@ const resolvePath = (routePath: string) => {
           v-for="child in props.item.children"
           :key="child.path"
           :item="child"
-          :is-collapse="props.isCollapse"
+          :is-collapse="isCollapse"
           :is-first-level="false"
-          :base-path="resolvePath(child.path)"
+          :base-path="child.path"
         />
       </template>
     </el-sub-menu>

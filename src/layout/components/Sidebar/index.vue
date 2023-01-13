@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { computed } from "vue"
-import { useRoute } from "vue-router"
+import { computed, ref } from "vue"
+import { useRouter } from "vue-router"
 import { storeToRefs } from "pinia"
 import { useAppStore } from "@/store/modules/app"
 import { usePermissionStore } from "@/store/modules/permission"
@@ -8,35 +8,64 @@ import { useSettingsStore } from "@/store/modules/settings"
 import SidebarItem from "./SidebarItem.vue"
 import SidebarLogo from "./SidebarLogo.vue"
 import { getCssVariableValue } from "@/utils"
+import { useTagsViewStore } from "@/store/modules/tags-view"
+import { message } from "ant-design-vue"
 
 const v3SidebarMenuBgColor = getCssVariableValue("--v3-sidebar-menu-bg-color")
 const v3SidebarMenuTextColor = getCssVariableValue("--v3-sidebar-menu-text-color")
 const v3SidebarMenuActiveTextColor = getCssVariableValue("--v3-sidebar-menu-active-text-color")
 
-const route = useRoute()
 const appStore = useAppStore()
 const permissionStore = usePermissionStore()
 const settingsStore = useSettingsStore()
+const tagsViewStore = useTagsViewStore()
+const router = useRouter()
 
 const { showSidebarLogo } = storeToRefs(settingsStore)
 
-const activeMenu = computed(() => {
-  const { meta, path } = route
-  if (meta?.activeMenu) {
-    return meta.activeMenu
-  }
-  return path
-})
+const activeMenu = ref<string>()
 
 const isCollapse = computed(() => {
-  return !appStore.sidebar.opened
+  return settingsStore.mode === "vertical" ? !appStore.sidebar.opened : false
 })
+
+const selectMenu = (menu: string) => {
+  const pathId = parseInt(menu)
+  let path = ""
+  const pm = permissionStore.menuList
+  const resolvePath = (id: number): any => {
+    const index = pm.findIndex((m) => {
+      return m.id === id
+    })
+    path = path ? `${pm[index].path}/${path}` : `${pm[index].path}`
+    if (!pm[index].parentId) return
+    else {
+      const indexParent = pm.findIndex((m) => {
+        return m.id === pm[index].parentId
+      })
+      return resolvePath(pm[indexParent].id)
+    }
+  }
+  resolvePath(pathId)
+  if (tagsViewStore.visitedViews.length >= settingsStore.tagNum) {
+    console.log(tagsViewStore.visitedViews)
+    const isActive = tagsViewStore.visitedViews.findIndex((r) => {
+      return (r.path || "") === path
+    })
+    if (isActive < 0) {
+      message.error("tag数量超过限制!")
+      return
+    }
+  }
+  activeMenu.value = `${menu}`
+  router.push(path)
+}
 </script>
 
 <template>
-  <div :class="{ 'has-logo': showSidebarLogo }">
+  <div :class="{ 'has-logo': showSidebarLogo, 'menu-hor': settingsStore.mode === 'horizontal' }">
     <SidebarLogo v-if="showSidebarLogo" :collapse="isCollapse" />
-    <el-scrollbar wrap-class="scrollbar-wrapper">
+    <el-scrollbar wrap-class="scrollbar-wrapper" :class="{ menuHorizontal: settingsStore.mode === 'horizontal' }">
       <el-menu
         :default-active="activeMenu"
         :collapse="isCollapse"
@@ -44,11 +73,12 @@ const isCollapse = computed(() => {
         :text-color="v3SidebarMenuTextColor"
         :active-text-color="v3SidebarMenuActiveTextColor"
         :unique-opened="true"
+        @select="selectMenu"
         :collapse-transition="false"
-        mode="vertical"
+        :mode="settingsStore.mode"
       >
         <SidebarItem
-          v-for="route in permissionStore.routes"
+          v-for="route in permissionStore.menu"
           :key="route.path"
           :item="route"
           :base-path="route.path"
@@ -121,6 +151,11 @@ const isCollapse = computed(() => {
   &.is-active {
     @include tip-line;
   }
+  display: flex !important;
+}
+
+:deep(.el-sub-menu__title) {
+  display: flex !important;
 }
 
 .el-menu--collapse {
@@ -132,5 +167,17 @@ const isCollapse = computed(() => {
       }
     }
   }
+}
+
+.menuHorizontal {
+  width: calc(100% - 200px);
+  height: var(--v3-header-height) !important;
+  :deep(.first-level) {
+    display: flex;
+    align-items: center;
+  }
+}
+.menu-hor {
+  display: flex;
 }
 </style>

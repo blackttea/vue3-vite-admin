@@ -1,13 +1,17 @@
 import { ref } from "vue"
 import { defineStore } from "pinia"
 import { type RouteLocationNormalized } from "vue-router"
+import { useSettingsStore } from "@/store/modules/settings"
 
 export type ITagView = Partial<RouteLocationNormalized>
 
 export const useTagsViewStore = defineStore("tags-view", () => {
   const visitedViews = ref<ITagView[]>([])
-
+  const settingsStore = useSettingsStore()
   const addVisitedView = (view: ITagView) => {
+    if (visitedViews.value.length > settingsStore.tagNum) {
+      return
+    }
     if (
       visitedViews.value.some((v, index) => {
         if (v.path === view.path) {

@@ -41,8 +41,6 @@ export const useUserStore = defineStore("user", () => {
         .then((res: any) => {
           roles.value = res.data.roles
           username.value = res.data.username
-          console.log(store)
-          debugger
           resolve(res)
         })
         .catch((error) => {
@@ -52,7 +50,8 @@ export const useUserStore = defineStore("user", () => {
   }
   /** 切换角色 */
   const changeRoles = async (role: string) => {
-    const newToken = "token-" + role
+    console.log(role)
+    const newToken = ""
     token.value = newToken
     setToken(newToken)
     await getInfo()

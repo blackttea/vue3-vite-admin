@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import { useSettingsStore } from "@/store/modules/settings"
+
+const settingsStore = useSettingsStore()
 const props = defineProps({
   collapse: {
     type: Boolean,
@@ -8,14 +11,13 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="sidebar-logo-container" :class="{ collapse: props.collapse }">
+  <div
+    class="sidebar-logo-container"
+    :class="{ collapse: props.collapse, logoHorizontal: settingsStore.mode === 'horizontal' }"
+  >
     <transition name="sidebar-logo-fade">
-      <router-link v-if="props.collapse" key="collapse" to="/">
-        <img src="@/assets/layout/logo.png" class="sidebar-logo" />
-      </router-link>
-      <router-link v-else key="expand" to="/">
-        <img src="@/assets/layout/logo-text-1.png" class="sidebar-logo-text" />
-      </router-link>
+      <img v-if="props.collapse" :src="settingsStore.logoNotFold" class="sidebar-logo" />
+      <img v-else :src="settingsStore.logoFold" class="sidebar-logo-text" />
     </transition>
   </div>
 </template>
@@ -48,5 +50,9 @@ const props = defineProps({
   .sidebar-logo-text {
     display: none;
   }
+}
+
+.logoHorizontal {
+  width: 200px !important;
 }
 </style>

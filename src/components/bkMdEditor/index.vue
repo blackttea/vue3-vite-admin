@@ -96,7 +96,6 @@ const props = defineProps({
     default: "editor"
   }
 })
-
 console.log(props)
 const code = ref(`\`\`\`js
       import Vue from 'vue';

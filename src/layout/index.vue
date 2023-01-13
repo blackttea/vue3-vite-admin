@@ -40,15 +40,19 @@ const showColorWeakness = computed(() => {
 const handleClickOutside = () => {
   appStore.closeSidebar(false)
 }
+
+const isVer = computed(() => {
+  return settingsStore.mode === "vertical"
+})
 </script>
 
 <template>
   <div :class="classObj" class="app-wrapper">
     <div v-if="classObj.mobile && classObj.openSidebar" class="drawer-bg" @click="handleClickOutside" />
-    <Sidebar class="sidebar-container" />
-    <div :class="{ hasTagsView: showTagsView }" class="main-container">
+    <Sidebar :class="isVer ? 'sidebar-container' : 'sidebar-container-horizontal'" />
+    <div :class="isVer ? 'main-container' : 'sidebar-container-horizontal'" class="hasTagsView">
       <div :class="{ 'fixed-header': fixedHeader }">
-        <NavigationBar />
+        <NavigationBar v-if="settingsStore.navigation" />
         <TagsView v-if="showTagsView" />
       </div>
       <AppMain />
@@ -158,6 +162,15 @@ const handleClickOutside = () => {
   .main-container,
   .sidebar-container {
     transition: none;
+  }
+}
+
+.hasTagsView {
+  .app-main {
+    min-height: calc(100vh - var(--v3-header-height));
+  }
+  .fixed-header + .app-main {
+    padding-top: var(--v3-header-height);
   }
 }
 </style>

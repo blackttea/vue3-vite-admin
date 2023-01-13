@@ -14,6 +14,7 @@ router.beforeEach(async (to, _from, next) => {
   NProgress.start()
   const userStore = useUserStoreHook()
   const permissionStore = usePermissionStoreHook()
+  document.title = to?.meta?.title || "vue3"
   // 判断该用户是否登录
   if (getToken()) {
     if (to.path === "/login") {
@@ -27,6 +28,10 @@ router.beforeEach(async (to, _from, next) => {
           if (asyncRouteSettings.open) {
             // 注意：角色必须是一个数组！ 例如: ['admin'] 或 ['developer', 'editor']
             await userStore.getInfo()
+            const permissionStore = usePermissionStoreHook()
+            for (const m of permissionStore.menu) {
+              router.addRoute("index", m)
+            }
             const roles = userStore.roles
             // 根据角色生成可访问的 Routes（可访问路由 = 常驻路由 + 有访问权限的动态路由）
             permissionStore.setRoutes(roles)

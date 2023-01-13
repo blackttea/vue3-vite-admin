@@ -11,6 +11,6 @@
   width: 100%;
   height: 100%;
   padding: 8px;
-  background-color: #ffffff;
+  background-color: #f2f3f5;
 }
 </style>

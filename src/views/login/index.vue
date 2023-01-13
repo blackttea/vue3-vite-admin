@@ -6,10 +6,11 @@ import { User, Lock, Key, Picture, Loading } from "@element-plus/icons-vue"
 import ThemeSwitch from "@/components/ThemeSwitch/index.vue"
 import { type FormInstance, FormRules } from "element-plus"
 import { type ILoginData, getLoginCodeApi } from "@/api/login"
+import { useSettingsStore } from "@/store/modules/settings"
 
 const router = useRouter()
 const loginFormRef = ref<FormInstance | null>(null)
-
+const settingsStore = useSettingsStore()
 /** 登录按钮 Loading */
 const loading = ref(false)
 /** 验证码图片 URL */
@@ -23,10 +24,7 @@ const loginForm: ILoginData = reactive({
 /** 登录表单校验规则 */
 const loginFormRules: FormRules = {
   username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
-  password: [
-    { required: true, message: "请输入密码", trigger: "blur" },
-    { min: 8, max: 16, message: "长度在 8 到 16 个字符", trigger: "blur" }
-  ],
+  password: [{ required: true, message: "请输入密码", trigger: "blur" }],
   code: [{ required: true, message: "请输入验证码", trigger: "blur" }]
 }
 /** 登录逻辑 */
@@ -68,10 +66,15 @@ const createCode = () => {
 
 /** 初始化验证码 */
 createCode()
+
+const logStyle = reactive({
+  background: `url(${settingsStore.loginBackImg}) center center no-repeat`,
+  backgroundSize: "100% 100%"
+})
 </script>
 
 <template>
-  <div class="login-container">
+  <div class="login-container" :style="logStyle">
     <ThemeSwitch class="theme-switch" />
     <div class="login-card">
       <div class="title">
