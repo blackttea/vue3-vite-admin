@@ -5,6 +5,7 @@ import { type RouteRecordRaw } from "vue-router"
 import { constantRoutes, asyncRoutes } from "@/router"
 import { Menu } from "@/type/menu"
 import useFormatTree from "@/hooks/useFormatTree"
+import useDeepClone from "@/hooks/useDeepClone"
 const view = import.meta.glob("../../**/**/**.vue")
 const _menuPrefix = "../../views"
 
@@ -65,7 +66,7 @@ export const usePermissionStore = defineStore("permission", () => {
         redirect: "",
         id: 1,
         parentId: null,
-        svgIcon: "lock",
+        elIcon: "Grid",
         seq: 1
       },
       {
@@ -145,15 +146,16 @@ export const usePermissionStore = defineStore("permission", () => {
       if (!data["component"] || data["component"] === "../layout/index.vue") data["children"] = []
       data["component"] = view[data["component"]] || data["component"]
       data["meta"] = {}
-      const showList = ["hidden", "title", "svgIcon"]
+      const showList = ["hidden", "title", "svgIcon", "elIcon"]
       for (const item of showList) if (data[item] !== undefined) data["meta"][item] = data[item]
     }
 
     menu.value.length = 0
     menuList.value.length = 0
+    const mCopy = useDeepClone(m)
+    for (const n of mCopy) menuList.value.push(n)
     const menuRoute = useFormatTree(m, "id", "parentId", "children", reFormData, undefined)
     for (const item of menuRoute) menu.value.push(item)
-    for (const n of m) menuList.value.push(n)
   }
   getMenu()
   const setRoutes = (roles: string[]) => {

@@ -53,34 +53,6 @@ const theOnlyOneChild = computed(() => {
   // because this.basePath already contains item's path information
   return { ...props.item, path: "" }
 })
-
-// const resolvePath = (routePath: any) => {
-//   debugger
-//   const settingsStore = useSettingsStore()
-//   const tagsViewStore = useTagsViewStore()
-//   // eslint-disable-next-line no-constant-condition
-//   if (routePath && false) {
-//     if (tagsViewStore.visitedViews.length === settingsStore.tagNum) {
-//       const isActive = tagsViewStore.visitedViews.findIndex((r) => {
-//         return (r.path || "").indexOf(routePath) > -1
-//       })
-//       debugger
-//       if (isActive > -1) return routePath
-//       else {
-//         message.error("超出最大tag数，请清除一部分不需要tag!")
-//       }
-//     }
-//   }
-//   console.log(props.basePath)
-//   return routePath.id
-//   // if (isExternal(routePath)) {
-//   //   return routePath
-//   // }
-//   // if (isExternal(props.basePath)) {
-//   //   return props.basePath
-//   // }
-//   // return path.resolve(props.basePath, routePath)
-// }
 </script>
 
 <template>
