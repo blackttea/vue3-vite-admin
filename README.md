@@ -1,15 +1,12 @@
 <div align="center">
-  <img alt="Vue3 Vite Admin" width="120" height="120" src="./src/assets/layout/logo.png">
-  <h1>Vue3 Vite Admin</h1>
+  <img alt="vue3-vite-admin" width="120" height="120" src="./src/assets/layout/logo.png">
+  <h1>vue3-vite-admin</h1>
   <span>English | <a href="./README.zh-CN.md">中文</a></span>
 </div>
 
 ## ⚡ Introduction
 
 Vue3 Vite Admin is a free and open source middle and background management system basic solution, based on mainstream framework such as Vue3, TypeScript, Element Plus, Pinia and Vite.
-
-- Vue-Cli 5.x: [v3-admin](https://github.com/un-pany/v3-admin)
-- Electron desktop: [v3-electron-vite](https://github.com/un-pany/v3-electron-vite)
 
 ## Feature
 
@@ -39,19 +36,9 @@ Vue3 Vite Admin is a free and open source middle and background management syste
 - **Dashboard**: Display different Dashboard pages according to different users
 - **Other functions**：SVG, Dynamic Sidebar, Dynamic Breadcrumb Navigation, Tabbed Navigation, Screenfull, Adaptive Shrink Sidebar
 
-## 📚 Document
+## Git repository
 
-[Chinese documentation](https://juejin.cn/post/7089377403717287972)
-
-## Gitee repository
-
-[Gitee](https://gitee.com/un-pany/v3-admin-vite)
-
-## Online preview
-
-| Location     | account             | Link                                            |
-| ------------ | ------------------- | ----------------------------------------------- |
-| github-pages | `admin` or `editor` | [Link](https://un-pany.github.io/v3-admin-vite) |
+[Gitee](https://github.com/blackttea/vue3-vite-admin.git)
 
 ## 🚀 Development
 
@@ -115,22 +102,3 @@ pnpm lint
 - `ci` CICD
 - `types` Type definition
 - `wip` In development
-
-## Project preview
-
-## 💕 Thanks star
-
-Small projects are not easy to get a star, if you like this project, welcome to support a star! This is the only motivation for the author to maintain it on an ongoing basis (whisper: it's free after all)
-
-## Group
-
-QQ group：1014374415 (left) && add me on WeChat，Invite you to join WeChat group (right)
-
-![qq.png](./src/assets/docs/qq.png)
-![wechat.png](./src/assets/docs/wechat.png)
-
-## 📄 License
-
-[MIT](./LICENSE)
-
-Copyright (c) 2022 [pany](https://github.com/pany-ang)
