@@ -4,7 +4,7 @@ import { defineStore } from "pinia"
 import { usePermissionStore } from "./permission"
 import { getToken, removeToken, setToken } from "@/utils/cache/cookies"
 import router, { resetRouter } from "@/router"
-import { type ILoginData, loginApi, getUserInfoApi } from "@/api/login"
+import { type ILoginData, getUserInfoApi, loginApi } from "@/api/login"
 import { type RouteRecordRaw } from "vue-router"
 
 export const useUserStore = defineStore("user", () => {

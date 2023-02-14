@@ -64,3 +64,18 @@ div:focus {
   background: #cccccc;
   border-radius: 5px;
 }
+
+@mixin con() {
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  @include con;
+  align-content: flex-start;
+}
+
+.container-center {
+  @include con;
+  align-items: center;
+}

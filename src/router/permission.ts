@@ -28,7 +28,7 @@ router.beforeEach(async (to, _from, next) => {
           if (asyncRouteSettings.open) {
             // 注意：角色必须是一个数组！ 例如: ['admin'] 或 ['developer', 'editor']
             await userStore.getInfo()
-            const permissionStore = usePermissionStoreHook()
+            await permissionStore.getMenu()
             for (const m of permissionStore.menu) {
               router.addRoute("index", m)
             }

@@ -7,6 +7,7 @@ import ThemeSwitch from "@/components/ThemeSwitch/index.vue"
 import { type FormInstance, FormRules } from "element-plus"
 import { type ILoginData, getLoginCodeApi } from "@/api/login"
 import { useSettingsStore } from "@/store/modules/settings"
+import useBase64 from "@/hooks/useBase64"
 
 const router = useRouter()
 const loginFormRef = ref<FormInstance | null>(null)
@@ -18,7 +19,7 @@ const codeUrl = ref("")
 /** 登录表单数据 */
 const loginForm: ILoginData = reactive({
   username: "admin",
-  password: "12345678",
+  password: "admin",
   code: "V3Admin"
 })
 /** 登录表单校验规则 */
@@ -60,7 +61,7 @@ const createCode = () => {
   // 获取验证码
   codeUrl.value = ""
   getLoginCodeApi().then((res: any) => {
-    codeUrl.value = res.data
+    codeUrl.value = useBase64(res)
   })
 }
 
