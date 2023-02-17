@@ -70,7 +70,9 @@ const theOnlyOneChild = computed(() => {
       <template #title>
         <svg-icon v-if="props.item.meta && props.item.meta.svgIcon" :name="props.item.meta.svgIcon" />
         <component v-else-if="props.item.meta && props.item.meta.elIcon" :is="props.item.meta.elIcon" class="el-icon" />
-        <span v-if="props.item.meta && props.item.meta.title">{{ props.item.meta.title }}</span>
+        <span v-if="props.item.meta && props.item.meta.title" class="vx-sub-menu-title">{{
+          props.item.meta.title
+        }}</span>
       </template>
       <template v-if="props.item.children">
         <sidebar-item
@@ -105,7 +107,7 @@ const theOnlyOneChild = computed(() => {
       .el-sub-menu__icon-arrow {
         display: none;
       }
-      span {
+      .vx-sub-menu-title {
         visibility: hidden;
       }
     }

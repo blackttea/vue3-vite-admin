@@ -86,3 +86,21 @@ export function sendEmailCode(data: formType) {
     data
   })
 }
+
+/** 获取用户详情 */
+export function deleteMenu(data: number[]) {
+  return request({
+    url: "api/menu/delMenu",
+    method: "post",
+    data
+  })
+}
+
+/** 获取用户详情 */
+export function updateMenu(data: Menu[]) {
+  return request({
+    url: "api/menu/updateMenu",
+    method: "post",
+    data
+  })
+}

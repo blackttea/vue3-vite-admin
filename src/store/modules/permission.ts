@@ -45,6 +45,7 @@ export const usePermissionStore = defineStore("permission", () => {
 
   const menu = ref<RouteRecordRaw[]>([])
   const menuList = ref<Array<Menu>>([])
+  const parentList = ref<Array<Menu>>([])
 
   let m: Menu[] = []
   const getMenu = async () => {
@@ -66,10 +67,18 @@ export const usePermissionStore = defineStore("permission", () => {
 
     menu.value.length = 0
     menuList.value.length = 0
+    parentList.value.length = 0
     const mCopy = useDeepClone(m)
+    const mCopy1 = useDeepClone(m)
     for (const n of mCopy) menuList.value.push(n)
     const menuRoute = useFormatTree(m, "id", "parentId", "children", reFormData, undefined)
     for (const item of menuRoute) menu.value.push(item)
+
+    const reFormData1 = (data: any): void => {
+      data["value"] = data["id"]
+    }
+    const menuRoute1 = useFormatTree(mCopy1, "id", "parentId", "children", reFormData1, undefined)
+    for (const item of menuRoute1) parentList.value.push(item)
   }
 
   const setRoutes = (roles: string[]) => {
@@ -83,7 +92,7 @@ export const usePermissionStore = defineStore("permission", () => {
     dynamicRoutes.value = accessedRoutes
   }
 
-  return { routes, dynamicRoutes, setRoutes, menu, menuList, getMenu }
+  return { routes, dynamicRoutes, setRoutes, menu, menuList, getMenu, parentList }
 })
 
 /** 在 setup 外使用 */

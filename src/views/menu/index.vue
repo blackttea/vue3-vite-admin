@@ -3,13 +3,12 @@ import pagePadding from "@/components/pagePadding/index.vue"
 import { usePermissionStore } from "@/store/modules/permission"
 import { reactive, ref } from "vue"
 import { Menu, iconList } from "@/type/menu"
-import * as ElementPlusIconsVue from "@element-plus/icons-vue"
+import { SearchOutlined } from "@ant-design/icons-vue"
+import addMenu from "./addMenu/index.vue"
+import { deleteMenu, updateMenu } from "@/api/login"
+import { message } from "ant-design-vue"
 
 const column = [
-  {
-    title: "id",
-    field: "id"
-  },
   {
     title: "名称",
     field: "title"
@@ -47,13 +46,14 @@ const column = [
     field: "seq"
   }
 ]
+const loading = ref(false)
 const permissionStore = usePermissionStore()
+const gridRef = ref()
 const hiddenOption = [
   { label: "是", value: true },
   { label: "否", value: false }
 ]
 const visible = ref(false)
-const iconType = ref("svgIcon")
 const icon = ref(undefined)
 const elIcon = reactive<iconList[]>([])
 
@@ -66,39 +66,68 @@ const handleOk = () => {}
 
 const getIcon = () => {
   elIcon.length = 0
-  for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-    elIcon.push({
-      label: key,
-      value: key,
-      icon: component
-    })
-  }
 }
 getIcon()
 
-const filterOption = (input: string, option: any) => {
-  return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0
+const delMenu = () => {
+  const id: number[] = []
+  for (const item of gridRef.value.getCheckboxRecords() || []) id.push(item.id)
+  deleteMenu(id).then((res: any) => {
+    if (res.code === 200) {
+      message.info(res.message)
+    } else {
+      message.error(res.message)
+    }
+  })
+}
+
+const search = async () => {
+  loading.value = true
+  await permissionStore.getMenu()
+  loading.value = false
+}
+
+const upMenu = () => {
+  updateMenu(permissionStore.menuList).then((res: any) => {
+    if (res.code === 200) {
+      message.info("更新成功!")
+    } else {
+      message.error(res.message)
+    }
+  })
 }
 </script>
 
 <template>
   <page-padding>
     <div class="tool-bar">
-      <a-button type="primary" size="small" class="bar-btn">保存</a-button>
-      <a-button type="primary" size="small" danger class="bar-btn">删除</a-button>
+      <add-menu class="bar-btn" />
+      <a-button type="primary" size="small" class="bar-btn" @click="upMenu">保存</a-button>
+      <a-button type="primary" size="small" danger class="bar-btn" @click="delMenu">删除</a-button>
+      <a-button type="primary" size="small" class="bar-btn" @click="search">
+        <template #icon>
+          <search-outlined />
+        </template>
+        搜索
+      </a-button>
     </div>
     <div class="menu-table">
       <vxe-table
+        ref="gridRef"
         :column-config="{ resizable: true }"
         :data="permissionStore.menuList"
         :checkbox-config="{ labelField: 'name', highlight: true }"
-        :tree-config="{ transform: true }"
+        :tree-config="{ transform: true, rowField: 'id', parentField: 'parentId' }"
         :edit-config="{ trigger: 'click', mode: 'cell' }"
         size="mini"
+        header-align="left"
+        align="left"
         style="height: 100%"
+        :loading="loading"
         border
       >
-        <vxe-column type="checkbox" title="名称" width="280" tree-node />
+        <vxe-column type="checkbox" title="名称" tree-node />
+        <vxe-column field="id" title="ID" />
         <vxe-column :field="item.field" :title="item.title" v-for="item in column" :key="item.field" :edit-render="{}">
           <template #default="{ row }" v-if="item.field === 'svgIcon'">
             <div class="icon-edit" @click="editIcon(row)">
@@ -106,7 +135,7 @@ const filterOption = (input: string, option: any) => {
               <component v-else-if="row['elIcon']" :is="row['elIcon']" class="el-icon" />
             </div>
           </template>
-          <template #edit="{ row }">
+          <template #edit="{ row }" v-if="!['id'].includes(item.field)">
             <vxe-select v-model="row[item.field]" v-if="item.field === 'hidden'" :options="hiddenOption" transfer />
             <div v-else-if="item.field === 'svgIcon'">
               <div class="icon-edit" @click="editIcon(row)">
@@ -121,35 +150,7 @@ const filterOption = (input: string, option: any) => {
     </div>
     <a-modal v-model:visible="visible" title="图标编辑" @ok="handleOk" @cancel="visible = false">
       <div>
-        <div class="icon-set">
-          <a-radio-group v-model:value="iconType" @change="icon = undefined" button-style="solid">
-            <a-radio-button value="svgIcon">svgIcon</a-radio-button>
-            <a-radio-button value="elIcon">elIcon</a-radio-button>
-            <a-radio-button value="local">localIcon</a-radio-button>
-          </a-radio-group>
-        </div>
-        <div v-if="iconType === 'svgIcon'">
-          <a-textarea v-model:value="icon" placeholder="菜单图标" allow-clear />
-        </div>
-        <div v-else-if="iconType == 'elIcon'">
-          <a-select
-            v-model:value="icon"
-            style="width: 100%"
-            placeholder="菜单图标选择"
-            :options="elIcon"
-            :filter-option="filterOption"
-            show-search
-          >
-            <template #suffixIcon><component :is="icon" class="el-icon" /></template>
-            <template #option="{ value: val, icon }">
-              <div class="el-icon-list">
-                <component :is="icon" class="el-icon" />
-                <span>{{ val }}</span>
-              </div>
-            </template>
-          </a-select>
-        </div>
-        <div v-else />
+        <a-textarea v-model:value="icon" placeholder="菜单图标" allow-clear />
       </div>
     </a-modal>
   </page-padding>
@@ -190,5 +191,11 @@ const filterOption = (input: string, option: any) => {
 .icon-set {
   width: 100%;
   margin-bottom: 20px;
+}
+
+:deep(.vxe-header--row) {
+  th {
+    background-color: #ffffff !important;
+  }
 }
 </style>

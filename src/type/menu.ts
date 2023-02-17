@@ -5,11 +5,11 @@ export declare interface Menu {
   component: string | null
   hidden: boolean
   redirect: string
-  id: number
+  id?: number
   svgIcon?: string
   elIcon?: string
-  seq: number
-  parentId: number | null
+  seq: number | undefined
+  parentId: number | null | undefined
   children?: Array<object>
 }
 

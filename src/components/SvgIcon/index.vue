@@ -25,28 +25,25 @@ const props = defineProps({
   color: {
     type: String,
     default: () => {
-      return "#ffffff"
+      return "#c0c4cc"
     }
   }
 })
 const svgIcon = ref<string>("")
-console.log(props.name)
 if (props.name.length > 15) {
   const w_icon = props.name.replace(/width="\d+"/g, `width="${props.width}"`)
   svgIcon.value = w_icon.replace(/height="\d+"/g, `width="${props.height}"`)
   svgIcon.value = svgIcon.value.replaceAll(/fill="[\s\S]+"/g, `fill="${props.color}"`)
 }
 const symbolId = computed(() => `#${props.prefix}-${props.name}`)
-const svgStyle = ref({ width: `${props.width}px`, height: `${props.height}px` })
+const svgStyle = ref({ width: `${props.width}px`, height: `${props.height}px`, fill: props.color })
 </script>
 
 <template>
-  <div v-if="props.name.length <= 15" :style="svgStyle" class="svg-con">
-    <svg class="svg-icon" aria-hidden="true">
-      <use :href="symbolId" />
-    </svg>
-  </div>
-  <span v-else v-html="svgIcon" class="w-svg-icon" />
+  <svg v-if="props.name.length <= 15" :style="svgStyle" class="svg-con svg-icon" aria-hidden="true">
+    <use :href="symbolId" />
+  </svg>
+  <span v-else v-html="svgIcon" class="w-svg-icon" :style="{ fill: color }" />
 </template>
 
 <style lang="scss" scoped>
